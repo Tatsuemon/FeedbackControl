@@ -149,7 +149,7 @@ class Worker(QtCore.QObject):
             # READ DATA
             p1_v = aio.analog_read_volt(CHP1, aio.DataRate.DR_860SPS, pga=aio.PGA.PGA_10_0352V)
             p2_v = aio.analog_read_volt(CHP2, aio.DataRate.DR_860SPS, pga=aio.PGA.PGA_10_0352V)
-            ip_v = aio.analog_read_volt(CHIP, aio.DataRate.DR_860SPS, pga=aio.PGA.PGA_10_0352V)
+            ip_v = aio.analog_read_volt(CHIP, aio.DataRate.DR_860SPS, pga=aio.PGA.PGA_5_0176V)
 
             deltaSeconds = (datetime.datetime.now() - self.__startTime).total_seconds()
             self.__rawData[step] = [deltaSeconds, p1_v, p2_v, ip_v, self.__IGmode, self.__IGrange, self.__qmsSignal]
@@ -293,6 +293,10 @@ class Worker(QtCore.QObject):
         Kp = 3.5
         Ki = 0.06
         Kd = 0
+
+        # TODO: 調整
+        if integral < -0.5:
+            integral = 0
 
         if e >= 0:
             output = Kp * e + Ki * integral + Kd * derivative
